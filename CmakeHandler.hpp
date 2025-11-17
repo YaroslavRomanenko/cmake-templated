@@ -3,10 +3,11 @@
 class CmakeHandler 
 {
 public:
+    void AskProjectSetup();
     void GenerateCmakeFile();
 
 private:
-    void GetVersionFromSys();
+    std::string GetVersionFromSys();
 
     std::string cmakeVersion;
     std::string projectName;

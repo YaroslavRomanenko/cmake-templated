@@ -6,7 +6,7 @@ void PrintInfo(int argc, char const *argv[]);
 int main(int argc, char const *argv[])
 {
     CmakeHandler cmakeHandler;
-    cmakeHandler.GenerateCmakeFile();
+    cmakeHandler.AskProjectSetup();
     
     // PrintInfo(argc, argv);
     return 0;

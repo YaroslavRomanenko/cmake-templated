@@ -1,11 +1,23 @@
 #include "CmakeHandler.hpp"
 #include <fstream>
 
+void CmakeHandler::AskProjectSetup()
+{
+    std::string buffer;
+    std::string cmakeChoseVersion = GetVersionFromSys();
+
+    std::cout << "Choose the version (" << cmakeChoseVersion << "): ";
+    std::getline(std::cin, buffer);
+
+    if (buffer == "\0")
+        cmakeVersion = cmakeChoseVersion; 
+    else 
+        cmakeVersion = buffer;
+}
+
 void CmakeHandler::GenerateCmakeFile()
 {
-    if (cmakeVersion.empty())
-        GetVersionFromSys();
-
+        
     if (projectName.empty())
         projectName = "MyProject";
 
@@ -17,9 +29,11 @@ void CmakeHandler::GenerateCmakeFile()
     CmakeFile << "cmake_minimum_required(VERSION " << cmakeVersion << ")\n";
     CmakeFile << "project(" << projectName << ")\n";
     CmakeFile << "add_executable(" << executableName << " main.cpp)";
+    
+    CmakeFile.close();
 }
 
-void CmakeHandler::GetVersionFromSys()
+std::string CmakeHandler::GetVersionFromSys()
 {
     const int versionSize = 50;
     int versionStart, versionEnd;
@@ -52,11 +66,14 @@ void CmakeHandler::GetVersionFromSys()
             break;
         }
     }
-    cmakeVersion.assign(data + versionStart, data + versionEnd);
+    std::string version;
+    version.assign(data + versionStart, data + versionEnd);
 
     status = pclose(result);
     if (status < 0) {
         std::cout << "status: " << status << std::endl;
         throw std::runtime_error("Error while closing pipe with the shell");
     }
+
+    return version;
 }
